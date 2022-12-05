@@ -1,0 +1,91 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{authblk}
+\usepackage{parskip}
+
+\title{The Hail System: \\ Computing for Data-Intensive Science}
+
+\author[1,2,3]{Daniel King}
+\author[4]{John Compitello}
+\author[1,2,3]{Jacqueline I. Goldstein}
+\author[1,2,3]{Daniel Goldstein}
+\author[1,2,3]{Timothy Poterba}
+\author[1,2,3]{Iris Rademacher}
+\author[1,2,3]{Patrick Schultz}
+\author[1,2,3]{Christopher Vittal}
+\author[4]{Arcturus Wang}
+\author[1,2,3]{Cotton Seed}
+\author[1,2,3]{Benjamin M Neale}
+
+\affil[1]{Program in Medical and Population Genetics\\ Broad Institute of MIT and Harvard\\ Cambridge, MA, USA.}
+\affil[2]{Analytic and Translational Genetics Unit\\ Massachusetts General Hospital\\ Boston, MA, USA.}
+\affil[3]{Stanley Center for Psychiatric Research\\ Broad Institute of MIT and Harvard\\ Cambridge, MA, USA.}
+\affil[4]{TBD}
+
+\date{December 2022}
+
+\usepackage{amsmath,amssymb}
+\usepackage{newpxtext,newpxmath}
+\usepackage{biblatex}
+\addbibresource{sample.bib}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+
+The anticipated release, in 2023, of the Genome Aggregation Database's 955,000 exome callset marks two decades of yearly doubling in the sample size of human genetic datasets. %
+%
+We have no evidence of deceleration; in fact, cheaper sequencing and the rise of biobanks suggest an acceleration. %
+%
+We present here a philosophy and reification thereof for extracting knowledge from genetic datasets at and beyond one million sequences.
+
+\section{Three Phases of Data-Intensive Science}
+
+On January 11, 2007, during a talk to the NRC-CSTB, Jim Gray exhorted us to ``do better at producing tools to support the whole research cycle from data capture and data curation to data analysis and data visualization'' \cite{fourth-paradigm}. %
+%
+Our experience in the genetics and genomics communities, suggest an additional and orthogonal division of the research cycle into the three phases: %
+\begin{itemize}%
+    \item Primary. The physical-digital interface: sequencers, telescopes, etc.
+    \item Secondary. Technical measurements become model-relevant quantities: e.g. alignment.
+    \item Tertiary. Interactive \& iterative knowledge making: regression, machine learning, etc.
+\end{itemize}%
+%
+These three phases were originally conceived within the context of genomics\cite{illumina-three-phases}, but we believe they apply broadly to data-intensive science. %
+%
+We may further characterize each phase in terms of its inherent concurrency of execution and inherent mutability by scientists. Primary analysis achieves concurrency both through multiplexing within one machine and the use of multiple machines. Primary analysis is the least mutable because it involves physical laboratory processes, physical machines, and logic encoded in circuitry. %
+%
+
+Secondary analysis is historically characterized by concurrent processing of many samples without interdependence. Unlike primary analysis, secondary analysis is more easily mutated. The analyses are largely defined in high-level programming languages and they are executed on commodity hardware. %
+%
+
+Tertiary analysis is highly mutable because it is largely implemented in terms of very high-level concepts in very widely understood programming languages such as R and Python. However, concurrency in tertiary analysis ranges from naively sample- or experiment-parallel to the complex dependency graphs of distributed linear algebra. %
+%
+
+Every tertiary analysis produces knowledge within the context of some model. Scientific knowledge is built on a series of increasingly abstract models. It is critical that our analytical systems facilitate the elevation of novel tertiary analyses into productionized secondary analyses because scientific knowledge making begins with the outputs of secondary analysis.
+
+Moreover, a unified analytical system empowers tertiary analysts to innovate across the three phases. For example, the development of a new blended genome-exome product at the Broad Institute required a change in every phase to realize the cost savings.
+
+\section{Four Interfaces for Data-Intensive Science}
+
+Science is the process of proposing, refuting, and fitting parameters of models. Data-intensive science relies on automated refutation and parameter-fitting of quantitative models. In papers and at blackboards, scientists describe these models in relational and linear algebraic terms. For example, ``For genomic variants with an allele frequency of at least 1\%, fit the model %
+%
+$\mathrm{phenotype} \sim \mathrm{GT} + \mathrm{PC}_0 \cdots \mathrm{PC}_n$ %
+%
+.''
+
+This model 
+
+\section{Hail Query}
+
+\section{Hail Batch}
+
+\cite{dremel}
+\cite{numpywren}
+\cite{rdd}
+
+\section{References}
+\printbibliography
+
+\end{document}
