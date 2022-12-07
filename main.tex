@@ -30,76 +30,249 @@
 \usepackage{biblatex}
 \addbibresource{sample.bib}
 
+\usepackage{listings}
+\usepackage{xcolor}
+%\usepackage{inconsolata}
+\usepackage[T1]{fontenc}
+\usepackage[scaled]{beramono}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+
 \begin{document}
 
 \maketitle
 
 \section{Introduction}
 
-The anticipated release, in 2023, of the Genome Aggregation Database's 955,000 exome callset marks two decades of yearly doubling in the sample size of human genetic datasets. %
-%
-We have no evidence of deceleration; in fact, cheaper sequencing and the rise of biobanks suggest an acceleration. %
-%
+The anticipated release, in 2023, of the Genome Aggregation Database's 955,000 exome callset marks two decades of yearly doubling in the sample size of human genetic datasets.
+We have no evidence of deceleration; in fact, cheaper sequencing and the rise of biobanks suggest an acceleration.
 We present here a philosophy and reification thereof for extracting knowledge from genetic datasets at and beyond one million sequences.
 
-\section{Three Phases of Data-Intensive Science}
+\section{The Three Phases}
 
 On January 11, 2007\footnote{When the vast majority of the authors were primary or secondary school students.}, during a talk to the NRC-CSTB, Jim Gray exhorted us to ``do better at producing tools to support the whole research cycle from data capture and data curation to data analysis and data visualization'' \cite{fourth-paradigm}. %
-%
-Our experience in the genetics and genomics communities, suggest an additional and orthogonal division of the research cycle into the three phases: %
-\begin{itemize}%
+
+Our experience in the genetics and genomics communities, suggest an additional and orthogonal division of the research cycle into the three phases:
+\begin{itemize}
     \item Primary. The physical-digital interface: sequencers, telescopes, etc.
     \item Secondary. Technical measurements become model-relevant quantities: e.g. alignment.
     \item Tertiary. Interactive \& iterative knowledge making: regression, machine learning, etc.
-\end{itemize}%
-%
-These three phases were originally conceived within the context of genomics\cite{illumina-three-phases}, but we believe they apply broadly to data-intensive science. %
-%
-We may further characterize each phase in terms of its inherent concurrency of execution and inherent mutability by scientists. Primary analysis achieves concurrency both through multiplexing within one machine and the use of multiple machines. Primary analysis is the least mutable because it involves physical laboratory processes, physical machines, and logic encoded in circuitry. %
-%
+\end{itemize}
+These three phases were originally conceived within the context of genomics\cite{illumina-three-phases}, but we believe they apply broadly to data-intensive science.
 
-Secondary analysis is historically characterized by concurrent processing of many samples without interdependence. Unlike primary analysis, secondary analysis is more easily mutated. The analyses are largely defined in high-level programming languages and they are executed on commodity hardware. %
-%
+We may further characterize each phase in terms of its inherent concurrency of execution and inherent mutability by scientists.
+Primary analysis achieves concurrency both through multiplexing within one machine and the use of multiple machines.
+Primary analysis is the least mutable because it involves physical laboratory processes, physical machines, and logic encoded in circuitry.
 
-Tertiary analysis is highly mutable because it is largely implemented in terms of very high-level concepts in very widely understood programming languages such as R and Python. However, concurrency in tertiary analysis ranges from naively sample- or experiment-parallel to the complex dependency graphs of distributed linear algebra. %
-%
+Secondary analysis is historically characterized by concurrent processing of many samples without interdependence.
+Unlike primary analysis, secondary analysis is more easily mutated.
+The analyses are largely defined in high-level programming languages and they are executed on commodity hardware.
 
-Every tertiary analysis produces knowledge within the context of some model. Scientific knowledge is built on a series of increasingly abstract models. It is critical that our analytical systems facilitate the elevation of novel tertiary analyses into productionized secondary analyses because scientific knowledge making begins with the outputs of secondary analysis.
+Tertiary analysis is highly mutable because it is largely implemented in terms of very high-level concepts in very widely understood programming languages such as R and Python.
+However, concurrency in tertiary analysis ranges from naively sample- or experiment-parallel to the complex dependency graphs of distributed linear algebra.
 
-Moreover, a unified analytical system empowers tertiary analysts to innovate across the three phases. For example, the development of a new blended genome-exome product at the Broad Institute required a change in every phase to realize the cost savings.
+Every tertiary analysis produces knowledge within the context of some model. Scientific knowledge is built on a series of increasingly abstract models.
+It is critical that our analytical systems facilitate the elevation of novel tertiary analyses into productionized secondary analyses because scientific knowledge making begins with the outputs of secondary analysis.
 
-\section{Four Interfaces for Data-Intensive Science}
+Moreover, a unified analytical system empowers tertiary analysts to innovate across the three phases.
+For example, the development of a new blended genome-exome product at the Broad Institute required a change in every phase to realize the cost savings.
+
+\section{The Four Interfaces}
 
 We believe four interfaces are key to the success of data-intensive science:
 
 \begin{itemize}
 \item Relational Algebra
 \item Linear Algebra
-\item Directed Acyclic Graphs of GNU/Linux binaries invoked by a POSIX shell
+\item ``Workflows'': directed acyclic graphs of containers
 \item Differentiable programming
 \end{itemize}
 
-Our conception of relational algebra is focused not on one-dimensional tables of data but on multi-dimensional ``tensor tables''. A zero-dimensional ``field'' hold only one value, e.g. a release date, a name, an author list. A one-dimensional ``field'' is equivalent to an RDBMS column. It takes on zero or more values indexed by a ``key''. A two-dimensional ``field'' takes on zero or more values and is indexed by two orthogonal keys: the ``row key'' and ``column key''.
+Our conception of relational algebra is focused not on one-dimensional tables of data but on multi-dimensional ``tensor tables''.
+A zero-dimensional ``field'' holds only one value, e.g. a release date, a name, an author list. A one-dimensional ``field'' is equivalent to an RDBMS column.
+It takes on zero or more values indexed by a ``key''. A two-dimensional ``field'' takes on zero or more values and is indexed by two orthogonal keys: the ``row key'' and ``column key''.
 
-A two-dimensional field is subtly different from a one-dimensional field with a ``compound'' or ``tuple-typed'' key: a two-dimensional field ought to permit access to a subset of data in time linear in the size of the subset. This is not true, for example, of accessing all records with $j \in {3, 4, 5}$ for a traditional RDBMS table with the key: $i, j$.
+A two-dimensional field is subtly different from a one-dimensional field with a ``compound'' key: a two-dimensional field ought to permit access to a subset of data in time linear in the size of the subset.
+This is not true, for example, of accessing all records with $j \in {3, 4, 5}$ for a traditional RDBMS table with the key: $i, j$.
 
-Relational algebra is extensively used during dataset ``quality-control''. For example, aggregations, such as the mean, by row (respectively: by column) are used to determine the quality of variants (respectively: samples) of large human sequencing studies.
+Relational algebra is commonly used for dataset ``quality-control''. For example, aggregations, such as the mean, by row (respectively: by column) are used to determine the quality of variants (respectively: samples) of large human sequencing studies.
 
-Science is the process of proposing, refuting, and fitting parameters of models. Data-intensive science relies on automated refutation and parameter-fitting of quantitative models. In papers and at blackboards, scientists describe these models in both relational and linear algebraic terms. For example, ``For genomic variants with an allele frequency of at least 1\%, fit the model: %
-%
-$\mathrm{phenotype} \sim \mathrm{GT} + \mathrm{PC}_0 \cdots \mathrm{PC}_n$%
-%
+Linear algebra appears in both quality-control and model fitting.
+During quality-control, $XX^T$ and $X^TX$ naturally express row correlation and column correlation.
+In genome-wide association studies, analysts remove highly correlated variants and samples.
+Model fitting typically leans heavily on linear algebraic operations whether directly solving linear models with ordinary least squares or using matrix operations within an iterative solver.
+
+User-defined functions are widely recognized as a useful but costly feature.
+We argue for the most extreme version of user-defined functions: arbitrary containers.
+We also require these containers have a shell.
+The shell is the natural language for describing the relationship between input and output files of an arbitrary binary.
+
+Differentiable programming is key linguistic infrastructure for modern machine learning and deep learning systems like PyTorch and TensorFlow.
+The relative difficulty of training large models retards their use in genomics.
+The system we present below does not support differentiable programming but we believe it is a critical missing piece.
+
+Science is the process of proposing, refuting, and fitting parameters of models.
+Data-intensive science relies on automated refutation and parameter-fitting of quantitative models.
+In papers and at blackboards, scientists describe these models in both relational and linear algebraic terms.
+For example, ``For genomic variants with an allele frequency of at least 1\%, fit the model:
+$\mathrm{phenotype} \sim \mathrm{GT} + \mathrm{PC}_0 \cdots \mathrm{PC}_n$
 .''
 
+\section{The Five Trusses}
+
+We believe the four interfaces are best implemented 
+
+\begin{enumerate}
+\item Elastic, multi-tenant, scalable, container-based cloud cluster scheduler.
+\item Cloud-native file system abstraction supporting local files and cloud blob storage.
+\item In-memory data format for arbitrary data types.
+\item On-disk data format for arbitrary data types.
+\item On-disk data format for partitioned data sets.
+\end{enumerate}
+
+\section{The Laptop \& The Cloud}
+
+Modern clouds provide numerous services.
+Let us focus on the essence of the cloud: blob storage and virtual machines.
+Cloud blob storage buckets should appear to the user as an effectively infinite capacity mounted disks.
+Virtual machines should appear to the user as an effectively infinite collection of cores.
+Of course, the user will notice the slightly increased latency of network-attached cores and disks.
+However, we strongly advocate against additional barriers between the laptop and the cloud.
+For example, cloud-hosted Notebooks are common (e.g. Google Collab, Dataproc Notebooks, Terra Notebooks).
+We believe this is a critical mistake.
+The user is severed from the customized and comfortable environment of their laptop.
+SSH, Notebooks, and blob storage REST APIs are not facile and familiar interfaces to scientists.
+
+In contrast the four interface of science (relation \& linear algebra, container DAGs, differentiable programming) are facile and familiar to scientists.
+We argue for the implementation of these interfaces atop a laptop-cloud hybrid environment.
+Relational algebra, linear algebra, and differentiable programming enable scientists to pose questions in a familiar high-level language.
+Directed acyclic graphs of containers provide the necessary escape hatch from 
+
+The user should not think about where their code executes.
+Instead, the user should describe the desired outcome or algorithm and the necessary resources.
+The system should 
+
+\section{Fast \& Facile Computing}
+
+The ideal system reads our mind and responds fast enough to saturate our mental bandwidth.
+Such a system is many PhD theses away from existence.
+Instead of mind-reading, we suggest the high-level language of relational algebra, linear algebra, and DAGs of containers.
+
+We endeavor to build a system that produces results faster than the human visual reaction time ($\sim250$ ms).
+
+We believe a user should not concern themselves with where their code runs.
+The user should specify the hardware 
+
+\section{Approximate Methods}
+
+\section{The Hail System}
+
+The Hail System is a cloud-native, elastic, multi-tenant, scientific analysis system.
+
+Cloud-native means the Hail System was designed for spot instances and cloud blob storage.
+We built for spot instances because their cost-per-core-hour is consistently a third of reserved instances.
+We built a file system API that can be efficiently implemented on cloud blob storage.
+Replicating traditional file system API semantics on the cloud blob storage is an unnecessary cost.
+
+Elastic means the Hail System adjusts its resource use to meet demand.
+Elasticity avoids wasted resources while allowing extensive scale.
+
+Multi-tenant means the Hail System allows multiple users to commingle on one cluster.
+Commingling is critical for two reasons.
+First, commingling on an elastic cluster amortizes virtual machine startup costs across all jobs.
+Second, commingling overlays ``spiky'' workloads to yield consistent use of many cores.
+Consistent use allows every user to cost-effectively use many cores for short periods of time.
+
+Data-intensive science includes both long-running and interactive jobs.
+Interactive jobs are characterized by usage spikes: short periods using many cores.
+Anticipating every possible query with an index is neither possible nor cheap.
+In contrast to the cost of creating and storing a litany of indices, the price of ``spot'' core-hours is $\sim$0.01 USD per hour.
+Compare that to the cost of a first year NIH post-doc: 27 USD per hour.
+Using 10,000 cores for ten seconds to search through hundreds of thousands of files costs a bit more than a quarter.
+In contrast, waiting for a ten core laptop to run for 1,000 seconds wastes a quarter-hour of the post-doc's time: almost 7 USD.
 
 
-\section{Hail Query}
+\section{The Hail System Specifics}
 
-\section{Hail Batch}
+The Hail System has two primary interfaces: the Query interface and the Batch interface.
+The Query interface presents relational and linear algebra with a ``data frame'' interface.
+The Batch interface concerns ``pipelines'' and ``workflows''.
+A distinguishing feature of the Hail System is the ability to \emph{compose} Query pipelines with Batch pipelines.
+Consider, for example, a single Python file, which uses Hail Query to count variants per genes per sample, export that to a file per-gene, uses Hail Batch to execute SAIGE\footnote{A highly optimized C++ program for fitting linear mixed models.} on each file, then uses Hail Query to load all the individual results files, and, finally, produce a plot of p-values.
 
+\subsection{Hail Query}
+
+The Hail Query interface is best thought of as a handful of languages.
+We manifest these languages in Python in the style of ``data frames''.
+In particular, queries are built through library calls and applying operators in a style evocative of the host language.
+For example,
+
+\begin{lstlisting}[language=Python, caption=Am example of Hail's ``data frame'' style]
+import numpy as np
+    
+def incmatrix(genl1,genl2):
+    m = len(genl1)
+    n = len(genl2)
+    M = None #to become the incidence matrix
+    VT = np.zeros((n*m,1), int)  #dummy variable
+    
+    #compute the bitwise xor matrix
+    M1 = bitxormatrix(genl1)
+    M2 = np.triu(bitxormatrix(genl2),1) 
+
+    for i in range(m-1):
+        for j in range(i+1, m):
+            [r,c] = np.where(M2 == M1[i,j])
+            for k in range(len(r)):
+                VT[(i)*n + r[k]] = 1;
+                VT[(i)*n + c[k]] = 1;
+                VT[(j)*n + r[k]] = 1;
+                VT[(j)*n + c[k]] = 1;
+                
+                if M is None:
+                    M = np.copy(VT)
+                else:
+                    M = np.concatenate((M, VT), 1)
+                
+                VT = np.zeros((n*m,1), int)
+    
+    return M
+\end{lstlisting}
+
+
+\subsection{Hail Batch}
+
+\section{Future Work}
+\subsection{Tensor Table}
+\subsection{Differentiable Programming}
 \cite{dremel}
 \cite{numpywren}
 \cite{rdd}
+\cite{towards-scalable-dataframe-systems}
 
 \section{References}
 \printbibliography
