@@ -1,12 +1,88 @@
-\documentclass[10pt]{article}
-\usepackage[utf8]{inputenc}
-\usepackage{authblk}
+\documentclass[10pt,a4paper%% ,twoside,openright,titlepage,
+%%                headinclude,footinclude,numbers=noenddot,
+%%                captions=tableheading
+]{article}
+%% \usepackage[utf8]{inputenc}
+\usepackage{url}
 \usepackage{parskip}
 
-\title{The Hail System: \\ Computing for Data-Intensive Science}
+\usepackage{authblk}
+\usepackage{tabularx}
+\usepackage{adjustbox}
+\usepackage[dvipsnames,table]{xcolor} % needs to come before forest for some reason
+\usepackage{forest}
 
-\author[1,2,3]{Daniel King}
+%% \usepackage{amsmath,amssymb}
+%% \usepackage{newpxtext,newpxmath}
+\usepackage{biblatex}
+\addbibresource{sample.bib}
+
+\usepackage{listings}
+%\usepackage{inconsolata}
+\usepackage[T1]{fontenc}
+\usepackage[scaled]{beramono}
+
+\definecolor{keyword}{rgb}{0.6,0,0}
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.97,0.97,0.97}
+
+% https://tex.stackexchange.com/questions/297345/why-is-the-start-row-of-rowcolors-ignored-in-tabularx
+\newcounter{tblerows}
+\expandafter\let\csname c@tblerows\endcsname\rownum
+
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{keyword},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=10pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2,
+    framexleftmargin=5pt,
+    framexrightmargin=5pt,
+    framextopmargin=3pt,
+    framexbottommargin=3pt,
+    frame=tb,
+    framerule=0pt,
+}
+
+\lstset{style=mystyle}
+
+\usepackage{subfig}
+\usepackage[nochapters%% eulermath=false,
+%%   beramono=true,
+%%   palatino=true,
+%%   pdfspacing,
+%%   style=classicthesis
+]{classicthesis}
+
+
+%% \newcounter{mparcnt}
+%% \renewcommand\themparcnt{\raise0.5ex\hbox{\arabic{mparcnt}}}
+%% \newcommand\mpar[1]{\refstepcounter{mparcnt}\themparcnt\marginpar{\footnotesize\themparcnt #1}}
+
+
+\begin{document}
+
+
+\pagestyle{plain}
+
+\title{\rmfamily\normalfont\spacedallcaps{The Hail System: Computing for Data-Intensive Science}}
+
 \author[4]{John Compitello}
+
 \author[1,2,3]{Jacqueline I. Goldstein}
 \author[1,2,3]{Daniel Goldstein}
 \author[1,2,3]{Konrad Karczewski}
@@ -23,48 +99,34 @@
 \affil[3]{Stanley Center for Psychiatric Research\\ Broad Institute of MIT and Harvard\\ Cambridge, MA, USA.}
 \affil[4]{TBD}
 
-\date{December 2022}
+\renewcommand\Authfont{\scshape\small}
+\renewcommand\Affilfont{\itshape\scriptsize}
+%% \author{
+%%   \spacedlowsmallcaps{Daniel King} \and
+%%   \spacedlowsmallcaps{John Compitello} \and
+%%   \spacedlowsmallcaps{Jacqueline I. Goldstein} \and
+%%   \spacedlowsmallcaps{Daniel Goldstein} \and
+%%   \spacedlowsmallcaps{Konrad Karczewski} \and
+%%   \spacedlowsmallcaps{Timothy Poterba} \and
+%%   \spacedlowsmallcaps{Iris Rademacher} \and
+%%   \spacedlowsmallcaps{Patrick Schultz} \and
+%%   \spacedlowsmallcaps{Christopher Vittal} \and
+%%   \spacedlowsmallcaps{Arcturus Wang} \and
+%%   \spacedlowsmallcaps{Cotton Seed} \and
+%%   \spacedlowsmallcaps{Benjamin M Neale}
+%% }
+\date{\spacedlowsmallcaps{December 2022}}
 
-\usepackage{amsmath,amssymb}
-\usepackage{newpxtext,newpxmath}
-\usepackage{biblatex}
-\addbibresource{sample.bib}
+\newcommand{\tableheadline}[1]{\spacedlowsmallcaps{#1}}
 
-\usepackage{listings}
-\usepackage{xcolor}
-%\usepackage{inconsolata}
-\usepackage[T1]{fontenc}
-\usepackage[scaled]{beramono}
-
-\definecolor{codegreen}{rgb}{0,0.6,0}
-\definecolor{codegray}{rgb}{0.5,0.5,0.5}
-\definecolor{codepurple}{rgb}{0.58,0,0.82}
-\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
-
-\lstdefinestyle{mystyle}{
-    backgroundcolor=\color{backcolour},   
-    commentstyle=\color{codegreen},
-    keywordstyle=\color{magenta},
-    numberstyle=\tiny\color{codegray},
-    stringstyle=\color{codepurple},
-    basicstyle=\ttfamily\footnotesize,
-    breakatwhitespace=false,         
-    breaklines=true,                 
-    captionpos=b,                    
-    keepspaces=true,                 
-    numbers=left,                    
-    numbersep=5pt,                  
-    showspaces=false,                
-    showstringspaces=false,
-    showtabs=false,                  
-    tabsize=2
-}
-
-\lstset{style=mystyle}
-
-\begin{document}
 
 \maketitle
+
+\begin{abstract}
+    Abstract.
+\end{abstract}
+
+\tableofcontents
 
 \section{Introduction}
 
@@ -74,7 +136,7 @@ We present here a philosophy and reification thereof for extracting knowledge fr
 
 \section{The Three Phases}
 
-On January 11, 2007\footnote{When the vast majority of the authors were primary or secondary school students.}, during a talk to the NRC-CSTB, Jim Gray exhorted us to ``do better at producing tools to support the whole research cycle from data capture and data curation to data analysis and data visualization'' \cite{fourth-paradigm}. %
+On January 11, 2007, during a talk to the NRC-CSTB, Jim Gray exhorted us to ``do better at producing tools to support the whole research cycle from data capture and data curation to data analysis and data visualization'' \cite{fourth-paradigm}. %
 
 Our experience in the genetics and genomics communities, suggest an additional and orthogonal division of the research cycle into the three phases:
 \begin{itemize}
@@ -171,11 +233,11 @@ SSH, Notebooks, and blob storage REST APIs are not facile and familiar interface
 In contrast the four interface of science (relation \& linear algebra, container DAGs, differentiable programming) are facile and familiar to scientists.
 We argue for the implementation of these interfaces atop a laptop-cloud hybrid environment.
 Relational algebra, linear algebra, and differentiable programming enable scientists to pose questions in a familiar high-level language.
-Directed acyclic graphs of containers provide the necessary escape hatch from 
+Directed acyclic graphs of containers provide the necessary escape hatch from
 
 The user should not think about where their code executes.
 Instead, the user should describe the desired outcome or algorithm and the necessary resources.
-The system should 
+The system should
 
 \section{Fast \& Facile Computing}
 
@@ -186,7 +248,7 @@ Instead of mind-reading, we suggest the high-level language of relational algebr
 We endeavor to build a system that produces results faster than the human visual reaction time ($\sim250$ ms).
 
 We believe a user should not concern themselves with where their code runs.
-The user should specify the hardware 
+The user should specify the hardware
 
 \section{Approximate Methods}
 
@@ -223,23 +285,361 @@ The Hail System has two primary interfaces: the Query interface and the Batch in
 The Query interface presents relational and linear algebra with a ``data frame'' interface.
 The Batch interface concerns ``pipelines'' and ``workflows''.
 A distinguishing feature of the Hail System is the ability to \emph{compose} Query pipelines with Batch pipelines.
-Consider, for example, a single Python file, which uses Hail Query to count variants per genes per sample, export that to a file per-gene, uses Hail Batch to execute SAIGE\footnote{A highly optimized C++ program for fitting linear mixed models.} on each file, then uses Hail Query to load all the individual results files, and, finally, produce a plot of p-values.
+Consider, for example, a single Python file, which uses Hail Query to count variants per genes per sample, export that to a file per-gene, uses Hail Batch to execute SAIGE
+\footnote{SAIGE is a very fast C++ program for fitting linear mixed models.}
+on each file, then uses Hail Query to load all the individual results files, and, finally, produce a plot of p-values.
 
 \subsection{Hail Query}
 
 The Hail Query interface is best thought of as a handful of languages.
-We manifest these languages in Python in the style of ``data frames''.
+We manifest these languages in Python in the style of ``data frames'' \ref{data-frame-style}.
 In particular, queries are built through library calls and applying operators in a style evocative of the host language.
-For example,
 
-\begin{lstlisting}[language=Python, caption=Am example of Hail's ``data frame'' style]
+\subsubsection{Datatypes}
+
+Hail Query distinguishes between ``small'' datatypes and  ``big'' datatypes.
+Small datatypes must fit in memory.
+Big datatypes are partitioned and evaluated in parallel.
+
+Hail Query has many small datatypes including integers, floating-point numbers, arrays, sets, dictionaries, and structures.
+An extensive listing is available in Figure \ref{fig:small-datatypes}.
+Every small datatype \texttt{T} includes a unique missing value \texttt{hl.missing(T)}.
+Every small datatype is totally ordered and has decidable equality.
+
+\begin{figure}[h]
+  \begin{adjustbox}{minipage=19cm, center}
+   \rowcolors{2}{gray!20}{white}
+    \begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}llX}
+      \toprule
+      \tableheadline{Name} & \tableheadline{Description} & \tableheadline{Examples} \\
+      \midrule
+      \texttt{bool} & Boolean values & \texttt{\footnotesize True} \\
+      \texttt{int}, \texttt{int32} & 32-bit integers & \texttt{\footnotesize 123} \\
+      \texttt{int64} & 64-bit integers & \texttt{\footnotesize 123} \\
+      \texttt{float32} & 32-bit floating-point number & \texttt{\footnotesize 1.0} \\
+      \texttt{float}, \texttt{float64} & 64-bit floating-point number & \texttt{\footnotesize 1.0} \\
+      \texttt{array(T)} & an array of data of type \texttt{\footnotesize T} & \texttt{\footnotesize []} \newline \texttt{\footnotesize [1.0, 1.0]} \\
+      \texttt{set(T)} & set of data of type \texttt{\footnotesize T} & \texttt{\footnotesize \{\}} \newline \texttt{\footnotesize \{5, 10, -4\}} \\
+      \texttt{dict(K,V)} & a finite mapping & \texttt{\footnotesize \{\}} \newline \texttt{\footnotesize \{5:"a", 10:"applepie"\}} \\
+      \texttt{struct(...,fN=TN)} & a structure with $N$ fields & \texttt{\footnotesize struct()} \newline \texttt{\footnotesize struct(x=5, y="a", z=struct(x=42.0))} \\
+      \texttt{tuple(..., TN)} & a structure with $N$ nameless fields & \texttt{\footnotesize (,)} \newline \texttt{\footnotesize (1.0, 1, "abc")} \\
+      \texttt{str} & a UTF-8 string & \texttt{\footnotesize "abc 123"} \\
+      \texttt{call} & a genotype call & \texttt{\footnotesize call(0, 1)} \newline \texttt{\footnotesize call(2)} \\
+      \texttt{locus(ref)} & a genomic locus in the reference \texttt{\footnotesize ref} & \texttt{\footnotesize locus("1", 100000, "GRCh37")} \newline \texttt{\footnotesize locus("chrM", 1234, "GRCh38")} \\
+      \texttt{interval(T)} & an interval on the type \texttt{T} & \texttt{\footnotesize interval(4.5, 1e8)} \newline \texttt{\footnotesize interval("abc", "xyzdef")} \newline \texttt{\footnotesize interval(locus("1",1234), locus("1",5000))} \\
+      \texttt{ndarray(T)} & a vector, matrix, or tensor containing \texttt{\footnotesize T} & \texttt{\footnotesize nd.array([1, 2])} \newline \texttt{\footnotesize nd.array([[1.0, 0.0], [0.0, 1.0]])} \\
+    \end{tabularx}
+  \end{adjustbox}
+  \caption{The Small Datatypes}
+  \label{fig:small-datatypes}
+\end{figure}
+
+Hail Query has three big datatypes: the Table, the Matrix Table, and the Block Matrix.
+A Table is Hail's analogue of the pandas DataFrame, the R dataframe, and the SQL table.
+A Table contains zero or more rows.
+Every row has the same \texttt{struct} type with zero or more fields.
+Every Table has a ``key'': an ordered list of zero or more fields.
+The rows of a table are stored and processed in key-order.
+A Table is partitioned: each row belongs to exactly one partition and partitions contain zero or more rows.
+For every partition, the interval of keys contained within is statically known.
+If a Table has a non-empty key, the key-intervals of the partitions are disjoint.
+Every Table also has zero or more ``global'' fields used to store metadata about the table such as the name of the dataset.
+
+A Matrix Table is used to represent matrical datasets with complex entry schemas.
+For example, genome sequencing callsets are represented as Matrix Tables.
+The rows of such a Matrix Table are genomic loci.
+The columns of such a Matrix Table are individuals (samples).
+The entries of such a Matrix Table are structured data containing genotype calls, finite probability distributions, and other experimental metadata.
+
+A Matrix Table has two orthogonal and disjoint keys: the row key and the column key.
+A Matrix Table has four classes of fields: ``global'', ``row'', ``column'', and ``entry''.
+Global fields are not indexed by either key.
+Row fields are indexed by the row key.
+Column fields are indexed by the column key.
+Entry fields are indexed by both keys.
+A Matrix Table only partitions its data along the row-axis, not the column-axis.
+In particular, operations that use entry fields will load an entire row of the matrix into memory.
+
+A Block Matrix is used to represent numerical matrices for linear algebraic operations.
+A Block Matrix is partitioned into square block of a statically known size.
+A Block Matrix has one nameless field.
+The type of that field may only be integeral or a floating-point.
+Block Matrix support matrix multiply, the singular value decomposition, and a few other simple matrical operations.
+
+\begin{figure}[h]
+  \begin{adjustbox}{minipage=19cm, center}
+   \rowcolors{2}{gray!20}{white}
+    \begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}llX}
+      \toprule
+      \tableheadline{Name} & \tableheadline{Description} & \tableheadline{Examples} \\
+      \midrule
+      \texttt{Table} & a partitioned tabular dataset & \texttt{\footnotesize hl.utils.range\_table(10)} \\
+      \texttt{MatrixTable} & a partioned matrical dataset & \texttt{\footnotesize hl.utils.range\_matrix\_table(10, 10)} \newline \texttt{\footnotesize hl.balding\_nichols\_model(1, 10000, 100)} \\
+      \texttt{BlockMatrix} & a block-partitioned linear algebraic, numeric matrix & ??? \\
+    \end{tabularx}
+  \end{adjustbox}
+  \caption{The Big Datatypes}
+  \label{fig:big-datatypes}
+\end{figure}
+
+\begin{minipage}{\linewidth}
+\begin{lstlisting}[language=Python, caption=An example of Hail's ``data frame'' style]
 import hail as hl
 
 t = hl.utils.range_table(10)
 t = t.annotate(foo = t.idx * t.idx)
-t = t.group_by(t.idx % 3 == 0).aggregate(hl.agg.mean(t.foo))
+t = t.group_by(
+    group_id = t.idx % 3
+).aggregate(
+    group_mean=hl.agg.mean(t.foo)
+)
+\label{fig:data-frame-style}
 \end{lstlisting}
+\end{minipage}
 
+\subsubsection{On-Disk, In-Fight, and In-Memory Formats}
+
+Hail has custom on-disk, in-flight, and in-memory data representations for small and large datatypes.
+We recognize that this infrasturcture largely duplicates similar efforts such as Apache Arrow and Zarr.
+When Hail began in 2015, the importance of zero-copy serialization to data formats was just becoming clear.
+Also around this time, the Apache Spark project introduced Tungsten: an efficient, off-heap, columnar data format.
+The Hail project, in the face of exponentially growing human sequencing datasets, could not wait for these community-supported projects to arrive and mature.
+Instead, we built a parallel ecosystem of data formats.
+
+Hail's big data types' ``on-disk''%
+\footnote{We use on-disk to mean: in cloud blob storage}
+formats are built using Hail's RVD%
+\footnote{
+This once referred to ``Region Value Dataset'' which began as a Spark RDD containing off-heap values.
+Today, Hail is not tied to Spark and this term has lost its original meaning.
+It now only refers to a partitioned \& on-disk data representation.
+}
+formats.
+The RVD format describes how to store a partitioned collection of keyed records.
+Each partition is stored in a separate file.
+The list of partition files and their key intervals is stored in a metadata file.
+All partitions store their records according to one of Hail's small data on-disk representations.
+See Figure \ref{rvd-format} for a visualization of the folder structure.
+
+
+
+
+\begin{figure}[h]
+  \begin{forest}
+    for tree={
+      font=\ttfamily,
+      grow'=0,
+      child anchor=west,
+      parent anchor=south,
+      anchor=west,
+      calign=first,
+      edge path={
+        \noexpand\path [draw, \forestoption{edge}]
+        (!u.south west) +(7.5pt,0) |- node[fill,inner sep=1.25pt] {} (.child anchor)\forestoption{edge label};
+      },
+      before typesetting nodes={
+        if n=1
+        {insert before={[,phantom]}}
+        {}
+      },
+      fit=band,
+      before computing xy={l=15pt},
+    }
+    [
+      [data,name=data
+        [metadata.json.gz]
+        [parts
+          [part-00-0c960d5b-f57a-4e85-a94c-32cd6989904a]
+          [part-01-2213c977-f3ba-4f51-bcfb-898f6bb65f2f]
+          [...]
+          [part-10-8869e10a-0c88-495c-9ce2-38c4b5aafa11]
+        ]
+      ]
+      [index,
+        tikz={
+          \node [name=foo, draw,gray,fit=()(!l), pin={[align=center,pin edge={gray,thick}] right:{Indices are an \\ optional component.}}] {};
+        }
+        [part-00-0c960d5b-f57a-4e85-a94c-32cd6989904a.idx]
+        [part-01-2213c977-f3ba-4f51-bcfb-898f6bb65f2f.idx]
+        [...]
+        [part-50-8869e10a-0c88-495c-9ce2-38c4b5aafa11.idx]
+      ]
+    ]
+  \end{forest}
+  \caption{The RVD format}
+  \label{fig:rvd-format}
+\end{figure}
+
+
+\begin{figure}[h]
+  \begin{forest}
+    for tree={
+      font=\ttfamily,
+      grow'=0,
+      child anchor=west,
+      parent anchor=south,
+      anchor=west,
+      calign=first,
+      edge path={
+        \noexpand\path [draw, \forestoption{edge}]
+        (!u.south west) +(7.5pt,0) |- node[fill,inner sep=1.25pt] {} (.child anchor)\forestoption{edge label};
+      },
+      before typesetting nodes={
+        if n=1
+        {insert before={[,phantom]}}
+        {}
+      },
+      fit=band,
+      before computing xy={l=15pt},
+    }
+    [name.ht
+      [README.txt]
+      [\_SUCCESS]
+      [metadata.json.gz]
+      [globals,
+        tikz={
+          \node [name=foo, draw,gray,fit=()(!2)(!l), pin={[align=center,pin edge={gray,thick}] right:{This is an RVD.}}] {};
+        }
+        [metadata.json.gz]
+        [parts
+          part-0]
+      ]
+      [rows,
+        tikz={
+          \node [name=foo, draw,gray,fit=()(!ll), pin={[align=center,pin edge={gray,thick}] right:{This is also \\ an RVD.}}] {};
+        }
+        [metadata.json.gz]
+        [parts
+          [part-00-0c960d5b-f57a-4e85-a94c-32cd6989904a] % FIXME: we should not publish a paper with the randomness after a sequential index
+          [part-01-2213c977-f3ba-4f51-bcfb-898f6bb65f2f]
+          [...]
+          [part-50-8869e10a-0c88-495c-9ce2-38c4b5aafa11]
+        ]
+      ]
+      [index,
+        [part-00-0c960d5b-f57a-4e85-a94c-32cd6989904a.idx]
+        [part-01-2213c977-f3ba-4f51-bcfb-898f6bb65f2f.idx]
+        [...]
+        [part-50-8869e10a-0c88-495c-9ce2-38c4b5aafa11.idx]
+      ]
+    ]
+  \end{forest}
+  \caption{The Table on-disk format}
+  \label{fig:table-format}
+\end{figure}
+
+\begin{figure}[h]
+  \begin{forest}
+    for tree={
+      font=\ttfamily,
+      grow'=0,
+      child anchor=west,
+      parent anchor=south,
+      anchor=west,
+      calign=first,
+      edge path={
+        \noexpand\path [draw, \forestoption{edge}]
+        (!u.south west) +(7.5pt,0) |- node[fill,inner sep=1.25pt] {} (.child anchor)\forestoption{edge label};
+      },
+      before typesetting nodes={
+        if n=1
+        {insert before={[,phantom]}}
+        {}
+      },
+      fit=band,
+      before computing xy={l=15pt},
+    }
+    [name.mt
+      [README.txt]
+      [\_SUCCESS]
+      [metadata.json.gz]
+      [globals
+        [README.txt]
+        [\_SUCCESS]
+        [metadata.json.gz]
+        [parts
+          part-0]
+      ]
+      [cols,
+        tikz={
+          \node [name=foo, draw,gray,fit=()(!ll), pin={[align=center,pin edge={gray,thick}] right:{This is a Table. \\ The globals, rows, and \\ entries are all also Tables}}] {};
+        }
+        [README.txt]
+        [\_SUCCESS]
+        [metadata.json.gz]
+        [parts
+          [part-00-0c960d5b-f57a-4e85-a94c-32cd6989904a] % FIXME: we should not publish a paper with the randomness after a sequential index
+          [part-01-2213c977-f3ba-4f51-bcfb-898f6bb65f2f]
+          [...]
+          [part-50-8869e10a-0c88-495c-9ce2-38c4b5aafa11]
+        ]
+      ]
+      [rows
+        [metadata.json.gz]
+        [parts
+          [part-00-0c960d5b-f57a-4e85-a94c-32cd6989904a] % FIXME: we should not publish a paper with the randomness after a sequential index
+          [part-01-2213c977-f3ba-4f51-bcfb-898f6bb65f2f]
+          [...]
+          [part-50-8869e10a-0c88-495c-9ce2-38c4b5aafa11]
+        ]
+      ]
+      [entries
+        [metadata.json.gz]
+        [parts
+          [part-00-0c960d5b-f57a-4e85-a94c-32cd6989904a] % FIXME: we should not publish a paper with the randomness after a sequential index
+          [part-01-2213c977-f3ba-4f51-bcfb-898f6bb65f2f]
+          [...]
+          [part-50-8869e10a-0c88-495c-9ce2-38c4b5aafa11]
+        ]
+      ]
+      [index,
+        [part-00-0c960d5b-f57a-4e85-a94c-32cd6989904a.idx]
+        [part-01-2213c977-f3ba-4f51-bcfb-898f6bb65f2f.idx]
+        [...]
+        [part-50-8869e10a-0c88-495c-9ce2-38c4b5aafa11.idx]
+      ]
+    ]
+  \end{forest}
+  \caption{The Matrix Table on-disk format}
+  \label{fig:matrix-table-format}
+\end{figure}
+
+\begin{figure}[h]
+  \begin{forest}
+    for tree={
+      font=\ttfamily,
+      grow'=0,
+      child anchor=west,
+      parent anchor=south,
+      anchor=west,
+      calign=first,
+      edge path={
+        \noexpand\path [draw, \forestoption{edge}]
+        (!u.south west) +(7.5pt,0) |- node[fill,inner sep=1.25pt] {} (.child anchor)\forestoption{edge label};
+      },
+      before typesetting nodes={
+        if n=1
+        {insert before={[,phantom]}}
+        {}
+      },
+      fit=band,
+      before computing xy={l=15pt},
+    }
+    [name.bm
+      %[README.txt]  % FIXME: block matrices should write README.txt files
+      [\_SUCCESS]
+      [metadata.json]  % FIXME: block matrices should compress their metadata files
+      [parts
+        [part-00-0c960d5b-f57a-4e85-a94c-32cd6989904a] % FIXME: we should not publish a paper with the randomness after a sequential index
+        [part-01-2213c977-f3ba-4f51-bcfb-898f6bb65f2f]
+        [...]
+        [part-50-8869e10a-0c88-495c-9ce2-38c4b5aafa11]
+      ]
+    ]
+  \end{forest}
+  \caption{The Block Matrix on-disk format}
+  \label{fig:block-matrix-format}
+\end{figure}
 
 \subsection{Hail Batch}
 
@@ -251,7 +651,9 @@ t = t.group_by(t.idx % 3 == 0).aggregate(hl.agg.mean(t.foo))
 \cite{rdd}
 \cite{towards-scalable-dataframe-systems}
 
-\section{References}
+\nocite{*}
+\addtocontents{toc}{\protect\vspace{\beforebibskip}}
+\addcontentsline{toc}{section}{\refname}
 \printbibliography
 
 \end{document}
