@@ -212,8 +212,8 @@ components.
 \begin{enumerate}
 \item Elastic, multi-tenant, scalable, container-based cloud cluster scheduler.
 \item Cloud-native file system abstraction supporting local files and cloud blob storage.
-\item In-memory data format for arbitrary data types.
-\item On-disk data format for arbitrary data types.
+\item In-memory data format for arbitrary datatypes.
+\item On-disk data format for arbitrary datatypes.
 \item On-disk data format for partitioned data sets.
 \end{enumerate}
 
@@ -292,7 +292,8 @@ on each file, then uses Hail Query to load all the individual results files, and
 \subsection{Hail Query}
 
 The Hail Query interface is best thought of as a handful of languages.
-We manifest these languages in Python in the style of ``data frames'' \ref{data-frame-style}.
+We manifest these languages in Python in the style of ``data frames''.
+Listing \ref{fig:data-frame-style} demonstrates this style with a snippet of Python that uses Hail Query.
 In particular, queries are built through library calls and applying operators in a style evocative of the host language.
 
 \subsubsection{Datatypes}
@@ -382,8 +383,8 @@ Block Matrix support matrix multiply, the singular value decomposition, and a fe
   \label{fig:big-datatypes}
 \end{figure}
 
-\begin{minipage}{\linewidth}
-\begin{lstlisting}[language=Python, caption=An example of Hail's ``data frame'' style]
+\begin{figure}[h]
+\begin{lstlisting}[language=Python, caption=An example of Hail's ``data frame'' style,label=fig:data-frame-style]
 import hail as hl
 
 t = hl.utils.range_table(10)
@@ -393,9 +394,8 @@ t = t.group_by(
 ).aggregate(
     group_mean=hl.agg.mean(t.foo)
 )
-\label{fig:data-frame-style}
 \end{lstlisting}
-\end{minipage}
+\end{figure}
 
 \subsubsection{On-Disk, In-Fight, and In-Memory Formats}
 
@@ -406,23 +406,47 @@ Also around this time, the Apache Spark project introduced Tungsten: an efficien
 The Hail project, in the face of exponentially growing human sequencing datasets, could not wait for these community-supported projects to arrive and mature.
 Instead, we built a parallel ecosystem of data formats.
 
-Hail's big data types' ``on-disk''%
-\footnote{We use on-disk to mean: in cloud blob storage}
+Hail's big datatypes' ``on-disk''%
+\footnote{On-disk either means in a traditional file system or in cloud blob storage}
 formats are built using Hail's RVD%
 \footnote{
 This once referred to ``Region Value Dataset'' which began as a Spark RDD containing off-heap values.
 Today, Hail is not tied to Spark and this term has lost its original meaning.
 It now only refers to a partitioned \& on-disk data representation.
 }
-formats.
+format.
 The RVD format describes how to store a partitioned collection of keyed records.
 Each partition is stored in a separate file.
-The list of partition files and their key intervals is stored in a metadata file.
-All partitions store their records according to one of Hail's small data on-disk representations.
-See Figure \ref{rvd-format} for a visualization of the folder structure.
+The list of partition files and their key intervals are stored in a metadata file.
+Every partition uses the same small data on-disk format to store the component records.
+Figure \ref{fig:rvd-format} visualizes the RVD format.
 
+The RVD format may optionally have an index located at an arbitrary relative location.
+If an index is present, every data partition has one index partition with the same name suffixed by ``.idx''.
+Every index partition is itself a B-tree of order 4096.
+Each B-tree leaf node is an array of index records.
+Each index record must contain the key for and offset to records in the corresponding data partition.
+Each index record may also contain arbitrary additional data stored in a field named ``annotation''.
+Every B-tree leaf node uses the same small data on-disk format and small datatype which is listed in Listing \ref{fig:index-type}.
 
+\begin{figure}[h]
+\begin{lstlisting}[language=Python, caption=The type of an RVD index file., label=fig:index-type]
+struct(
+  first_idx=int64,
+  keys=array(
+    struct(
+      key=KeyType,
+      offset=int64,
+      annotation=ExtraDataType)))
+\end{lstlisting}
+\end{figure}
 
+Multiple RVDs may share the same index.
+When two RVDs share an index, one of the offsets is stored in the annotation field.
+Hail only uses this feature in Matrix Tables.
+A Matrix Table's row fields and entry fields are identically partitioned along their shared row key.
+The row record offsets are stored in the ``offset'' field.
+The entry record offsets are stored under a nested structure in the ``annotation'' field.
 
 \begin{figure}[h]
   \begin{forest}
@@ -445,8 +469,9 @@ See Figure \ref{rvd-format} for a visualization of the folder structure.
       fit=band,
       before computing xy={l=15pt},
     }
-    [
-      [data,name=data
+    [directory
+      [...]
+      [name
         [metadata.json.gz]
         [parts
           [part-00-0c960d5b-f57a-4e85-a94c-32cd6989904a]
@@ -457,12 +482,18 @@ See Figure \ref{rvd-format} for a visualization of the folder structure.
       ]
       [index,
         tikz={
-          \node [name=foo, draw,gray,fit=()(!l), pin={[align=center,pin edge={gray,thick}] right:{Indices are an \\ optional component.}}] {};
+          \node [name=foo, draw,gray,fit=()(!l)(!ll), pin={[align=center,pin edge={gray,thick}] right:{Indices are an \\ optional component.}}] {};
         }
-        [part-00-0c960d5b-f57a-4e85-a94c-32cd6989904a.idx]
-        [part-01-2213c977-f3ba-4f51-bcfb-898f6bb65f2f.idx]
+        [part-00-0c960d5b-f57a-4e85-a94c-32cd6989904a.idx
+          [index]
+          [metadata.json.gz]]
+        [part-01-2213c977-f3ba-4f51-bcfb-898f6bb65f2f.idx
+          [index]
+          [metadata.json.gz]]
         [...]
-        [part-50-8869e10a-0c88-495c-9ce2-38c4b5aafa11.idx]
+        [part-50-8869e10a-0c88-495c-9ce2-38c4b5aafa11.idx
+          [index]
+          [metadata.json.gz]]
       ]
     ]
   \end{forest}
@@ -470,6 +501,10 @@ See Figure \ref{rvd-format} for a visualization of the folder structure.
   \label{fig:rvd-format}
 \end{figure}
 
+The Table on-disk format consists of three files and two RVDs.
+A README.txt file is intended for human beings who stumble across this Table.
+Hail Query ensures writing the 0-byte \_SUCCESS file has a happens-after relationship with every other file in the Table.
+The metadata.json.gz file contains version information, 
 
 \begin{figure}[h]
   \begin{forest}
@@ -498,11 +533,11 @@ See Figure \ref{rvd-format} for a visualization of the folder structure.
       [metadata.json.gz]
       [globals,
         tikz={
-          \node [name=foo, draw,gray,fit=()(!2)(!l), pin={[align=center,pin edge={gray,thick}] right:{This is an RVD.}}] {};
+          \node [name=foo, draw,gray,fit=()(!2)(!ll), pin={[align=center,pin edge={gray,thick}] right:{This is an RVD.}}] {};
         }
         [metadata.json.gz]
         [parts
-          part-0]
+          [part-0]]
       ]
       [rows,
         tikz={
@@ -516,12 +551,19 @@ See Figure \ref{rvd-format} for a visualization of the folder structure.
           [part-50-8869e10a-0c88-495c-9ce2-38c4b5aafa11]
         ]
       ]
-      [index,
-        [part-00-0c960d5b-f57a-4e85-a94c-32cd6989904a.idx]
-        [part-01-2213c977-f3ba-4f51-bcfb-898f6bb65f2f.idx]
+      [index
+        [part-00-0c960d5b-f57a-4e85-a94c-32cd6989904a.idx
+          [index]
+          [metadata.json.gz]]
+        [part-01-2213c977-f3ba-4f51-bcfb-898f6bb65f2f.idx
+          [index]
+          [metadata.json.gz]]
         [...]
-        [part-50-8869e10a-0c88-495c-9ce2-38c4b5aafa11.idx]
+        [part-50-8869e10a-0c88-495c-9ce2-38c4b5aafa11.idx
+          [index]
+          [metadata.json.gz]]
       ]
+      [references]
     ]
   \end{forest}
   \caption{The Table on-disk format}
@@ -558,20 +600,17 @@ See Figure \ref{rvd-format} for a visualization of the folder structure.
         [\_SUCCESS]
         [metadata.json.gz]
         [parts
-          part-0]
+          [part-0]]
       ]
       [cols,
         tikz={
-          \node [name=foo, draw,gray,fit=()(!ll), pin={[align=center,pin edge={gray,thick}] right:{This is a Table. \\ The globals, rows, and \\ entries are all also Tables}}] {};
+          \node [name=foo, draw,gray,fit=()(!4)(!ll), pin={[align=center,pin edge={gray,thick}] right:{This is a Table. \\ The globals, rows, and \\ entries are all also Tables}}] {};
         }
         [README.txt]
         [\_SUCCESS]
         [metadata.json.gz]
         [parts
-          [part-00-0c960d5b-f57a-4e85-a94c-32cd6989904a] % FIXME: we should not publish a paper with the randomness after a sequential index
-          [part-01-2213c977-f3ba-4f51-bcfb-898f6bb65f2f]
-          [...]
-          [part-50-8869e10a-0c88-495c-9ce2-38c4b5aafa11]
+          [part-0]
         ]
       ]
       [rows
@@ -592,12 +631,8 @@ See Figure \ref{rvd-format} for a visualization of the folder structure.
           [part-50-8869e10a-0c88-495c-9ce2-38c4b5aafa11]
         ]
       ]
-      [index,
-        [part-00-0c960d5b-f57a-4e85-a94c-32cd6989904a.idx]
-        [part-01-2213c977-f3ba-4f51-bcfb-898f6bb65f2f.idx]
-        [...]
-        [part-50-8869e10a-0c88-495c-9ce2-38c4b5aafa11.idx]
-      ]
+      [index
+        [...]]
     ]
   \end{forest}
   \caption{The Matrix Table on-disk format}
