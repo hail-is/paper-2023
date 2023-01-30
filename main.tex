@@ -1,3 +1,4 @@
+
 \documentclass[10pt,a4paper%% ,twoside,openright,titlepage,
 %%                headinclude,footinclude,numbers=noenddot,
 %%                captions=tableheading
@@ -81,16 +82,16 @@
 
 \title{\rmfamily\normalfont\spacedallcaps{The Hail System: Computing for Data-Intensive Science}}
 
-\author[1,2,3]{Dan King}
 \author[4]{John Compitello}
 \author[1,2,3]{Jacqueline I. Goldstein}
 \author[1,2,3]{Daniel Goldstein}
-\author[1,2,3]{Konrad Karczewski}
+\author[1,2,3]{Dan King}
 \author[1,2,3]{Timothy Poterba}
 \author[1,2,3]{Iris Rademacher}
 \author[1,2,3]{Patrick Schultz}
 \author[1,2,3]{Christopher Vittal}
 \author[4]{Arcturus Wang}
+\author[1,2,3]{Konrad Karczewski}
 \author[1,2,3]{Cotton Seed}
 \author[1,2,3]{Benjamin M Neale}
 
@@ -376,7 +377,7 @@ Block Matrix support matrix multiply, the singular value decomposition, and a fe
       \midrule
       \texttt{Table} & a partitioned tabular dataset & \texttt{\footnotesize hl.utils.range\_table(10)} \\
       \texttt{MatrixTable} & a partioned matrical dataset & \texttt{\footnotesize hl.utils.range\_matrix\_table(10, 10)} \newline \texttt{\footnotesize hl.balding\_nichols\_model(1, 10000, 100)} \\
-      \texttt{BlockMatrix} & a block-partitioned linear algebraic, numeric matrix & ??? \\
+      \texttt{BlockMatrix} & a block-partitioned linear algebraic, numeric matrix & \texttt{\footnotesize hl.linalg.BlockMatrix.from\_numpy(\newline np.array([[1, 2], [3, 4]]))} \newline \texttt{\footnotesize hl.linalg.BlockMatrix.from\_entry\_expr(\newline \quad mt.GT.n\_alt\_alleles()} \\
     \end{tabularx}
   \end{adjustbox}
   \caption{The Big Datatypes}
@@ -501,10 +502,17 @@ The entry record offsets are stored under a nested structure in the ``annotation
   \label{fig:rvd-format}
 \end{figure}
 
-The Table on-disk format consists of three files and two RVDs.
+The Table on-disk format at minimum is a directory containing three files.
+The directory may also contain a globals RVD, a rows RVD, an index folder, and a references folder.
 A README.txt file is intended for human beings who stumble across this Table.
 Hail Query ensures writing the $0$-byte \_SUCCESS file has a happens-after relationship with every other file in the Table.
-The metadata.json.gz file contains version information, 
+The metadata.json.gz file contains version information, where to find the globals and rows RVDs, the number of records in each partition, and the Table's type.
+The globals and rows RVDs may be contained within the Table directory or may reside at another, usually relative, path.
+The index folder contains a separate index file for every partition of the dataset.
+The references folder contains any non-default Genome References referenced in the Table's type.
+
+The MatrixTable on-disk format contains the same three files, two RVDs, index folder, and references folder as the Table format but also has an entries  RVD.
+
 
 \begin{figure}[h]
   \begin{forest}

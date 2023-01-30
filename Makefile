@@ -23,4 +23,4 @@ tex-deps:
 .PHONY: watch
 watch:
   # brew install fswatch
-	fswatch -o main.tex sample.bib | xargs -I{} /bin/bash -c make main.pdf
+	fswatch -o main.tex sample.bib | xargs -I{} pdflatex main
